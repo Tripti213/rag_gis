@@ -1,0 +1,61 @@
+id,name,type,latitude,longitude,district,capacity,description
+1,Meja Dam,Dam,20.3441,74.6352,Bhilwara,450M L,Major irrigation source near Bhilwara.
+2,Harni Mahadev Pond,Pond,25.3602,74.6401,Bhilwara,15M L,Religious pond storing rainwater.
+3,Kothari River Reservoir,Reservoir,25.3211,74.7023,Bhilwara,380M L,Supports irrigation and drinking supply.
+4,Mandpiya Check Dam,Check Dam,25.2954,74.6155,Bhilwara,8M L,Groundwater recharge structure.
+5,Shahpura Lake,Lake,25.3305,74.5854,Bhilwara,120M L,Historic lake used for storage.
+6,Gandhi Sagar Tank,Tank,25.3555,74.6612,Bhilwara,25M L,Rainwater harvesting tank.
+7,Suwana Pond,Pond,25.3123,74.6721,Bhilwara,12M L,Local agricultural water source.
+8,Raipur Dam,Dam,25.2876,74.7014,Bhilwara,300M L,Seasonal irrigation reservoir.
+9,Gangapur Check Dam,Check Dam,25.3681,74.5982,Bhilwara,6M L,Recharge structure for nearby farms.
+10,Bagor Lake,Lake,25.3422,74.6225,Bhilwara,95M L,Traditional storage lake.
+11,Bhilwara Minor Tank,Tank,25.3512,74.6488,Bhilwara,18M L,Urban rainwater collection.
+12,Hurda Reservoir,Reservoir,25.2781,74.6409,Bhilwara,210M L,Supports canal irrigation.
+13,Asind Pond,Pond,25.2959,74.6893,Bhilwara,14M L,Village drinking water source.
+14,Phulia Check Dam,Check Dam,25.3266,74.6044,Bhilwara,7M L,Groundwater recharge structure.
+15,Karoi Lake,Lake,25.3488,74.6731,Bhilwara,80M L,Seasonal monsoon lake.
+16,Bigod Tank,Tank,25.3097,74.6299,Bhilwara,22M L,Agricultural storage tank.
+17,Banera Dam,Dam,25.3721,74.6815,Bhilwara,260M L,Irrigation support dam.
+18,Kareda Pond,Pond,25.3344,74.6177,Bhilwara,11M L,Rain-fed village pond.
+19,Raipur Minor Reservoir,Reservoir,25.2888,74.7122,Bhilwara,140M L,Supports nearby crops.
+20,Sanganer Check Dam,Check Dam,25.3662,74.6435,Bhilwara,5M L,Water conservation structure.
+21,Meja Minor Tank,Tank,25.3499,74.6544,Bhilwara,19M L,Supplementary irrigation tank.
+22,Shambhugarh Lake,Lake,25.3177,74.6682,Bhilwara,70M L,Local ecosystem support lake.
+23,Barliyas Pond,Pond,25.3411,74.6915,Bhilwara,13M L,Seasonal water storage.
+24,Gulabpura Dam,Dam,25.2475,74.6422,Bhilwara,190M L,Industrial and irrigation use.
+25,Agucha Reservoir,Reservoir,25.2733,74.7041,Bhilwara,230M L,Mining area water storage.
+26,Shahpura Check Dam,Check Dam,25.3333,74.5799,Bhilwara,6M L,Monsoon recharge structure.
+27,Hurda Pond,Pond,25.2794,74.6481,Bhilwara,10M L,Community drinking source.
+28,Bijolia Tank,Tank,25.1312,74.9721,Bhilwara,35M L,Historic step-tank storage.
+29,Bijolia Lake,Lake,25.1355,74.9688,Bhilwara,90M L,Ancient water conservation lake.
+30,Bijolia Check Dam,Check Dam,25.1299,74.9755,Bhilwara,4M L,Recharge near temple zone.
+31,Mandalgarh Dam,Dam,25.1945,75.0728,Bhilwara,285M L,Irrigation dam near Mandalgarh fort region.
+32,Triveni Barrage,Barrage,25.3458,74.6362,Bhilwara,150M L,Barrage constructed across local stream for irrigation control.
+33,Upreda Pond,Pond,25.3082,74.7215,Bhilwara,16M L,Seasonal village pond in Upreda area.
+34,Dabok Talab,Lake,25.3417,74.6119,Bhilwara,78M L,Traditional storage lake supporting farming.
+35,Chandras Tank,Tank,25.3564,74.6572,Bhilwara,21M L,Urban rainwater harvesting structure.
+36,Bhojpura Check Dam,Check Dam,25.3698,74.6231,Bhilwara,7M L,Groundwater recharge dam near Bhojpura.
+37,Salera Reservoir,Reservoir,25.2755,74.6991,Bhilwara,205M L,Reservoir supplying irrigation canals.
+38,Bhagwanpura Pond,Pond,25.3238,74.6745,Bhilwara,13M L,Local drinking water pond.
+39,Danta Lake,Lake,25.3329,74.6487,Bhilwara,88M L,Historic lake used for monsoon storage.
+40,Rewati Dam,Dam,25.2598,74.6884,Bhilwara,245M L,Medium irrigation project in rural belt.
+41,Badnor Talab,Lake,25.3494,74.7027,Bhilwara,92M L,Supports agricultural ecosystem.
+42,Amargarh Tank,Tank,25.3014,74.6628,Bhilwara,26M L,Water storage tank near Amargarh.
+43,Deogarh Check Dam,Check Dam,25.3642,74.6124,Bhilwara,6M L,Small recharge structure.
+44,Lordiya Pond,Pond,25.3125,74.6827,Bhilwara,12M L,Community-level irrigation pond.
+45,Palri Reservoir,Reservoir,25.2864,74.6918,Bhilwara,225M L,Reservoir used for seasonal storage.
+46,Kachhola Lake,Lake,25.3587,74.6356,Bhilwara,83M L,Supports biodiversity and irrigation.
+47,Sareri Dam,Dam,25.2431,74.6512,Bhilwara,310M L,Large irrigation support dam.
+48,Paroli Tank,Tank,25.3302,74.6714,Bhilwara,29M L,Rain-fed water storage tank.
+49,Sakargarh Pond,Pond,25.3179,74.6571,Bhilwara,14M L,Village pond for livestock and irrigation.
+50,Antali Check Dam,Check Dam,25.3714,74.6189,Bhilwara,5M L,Groundwater recharge near Antali village.
+51,Mokhampura Reservoir,Reservoir,25.2697,74.7084,Bhilwara,240M L,Supports canal irrigation network.
+52,Kabradia Lake,Lake,25.3468,74.6642,Bhilwara,96M L,Monsoon storage lake.
+53,Borani Dam,Dam,25.2516,74.6763,Bhilwara,270M L,Irrigation-focused dam structure.
+54,Khanpur Talab,Pond,25.3045,74.6931,Bhilwara,15M L,Traditional water storage pond.
+55,Neemdi Tank,Tank,25.3388,74.6539,Bhilwara,20M L,Community rainwater harvesting tank.
+56,Rampura Check Dam,Check Dam,25.3621,74.6428,Bhilwara,8M L,Small recharge dam near Rampura.
+57,Kanpura Reservoir,Reservoir,25.2789,74.7015,Bhilwara,215M L,Reservoir serving agricultural lands.
+58,Thikariya Lake,Lake,25.3515,74.6197,Bhilwara,84M L,Seasonal lake with irrigation importance.
+59,Baran Dam,Dam,25.2604,74.6826,Bhilwara,295M L,Medium-scale irrigation dam.
+60,Chamanpura Pond,Pond,25.3261,74.6798,Bhilwara,11M L,Local village water source.
