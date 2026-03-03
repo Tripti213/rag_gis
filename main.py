@@ -69,7 +69,10 @@ def main():
     #KG RETRIEVAL    
         kg_context=kg_retriever.dynamic_search(corrected)
     #MERGING BOTH for best results    
-        context=faiss_context+kg_context
+        context=[]
+        for item in faiss_context+kg_context:
+            if item not in context:
+                context.append(item)
         
         answer=get_resp(context,corrected)
         print("\nBot:",answer,"\n")
