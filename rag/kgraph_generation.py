@@ -1,6 +1,5 @@
 import pandas as pd
 import re
-
 # knowledge graph is based on following factors
 # Entities
 # Relations

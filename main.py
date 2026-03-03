@@ -38,8 +38,8 @@ def pipeline():
     retriever_obj=retriever(vectdb, embedder_obj, fuzzy_matcher)
 
     print("\nLoading Knowledge Graph...")
-    triples = load_kgraph("rag/kgraph.json")
-    kg_retriever = KGRetriever(triples)
+    triples=load_kgraph("rag/kgraph.json")
+    kg_retriever=KGRetriever(triples)
 
     return retriever_obj,fuzzy_matcher,kg_retriever
 
@@ -59,17 +59,25 @@ def main():
         if question.lower()=="exit":
             print("BBYE!")
             break
+
+    #Applying typo correction    
+        corrected=fuzzy_matcher.correct(question)
+        print("\nOriginal Query :",question)
+        print("Corrected Query:",corrected)
     #FAISS RETRIEVAL
-        faiss_context=retriever_obj.retrieve(question)
+        faiss_context=retriever_obj.retrieve(corrected)
     #KG RETRIEVAL    
-        entities=kg_retriever.search(question)
-        filtered=kg_retriever.filter_by_location(entities, "bhilwara")
-        kg_context=filtered
+        kg_context=kg_retriever.dynamic_search(corrected)
     #MERGING BOTH for best results    
         context=faiss_context+kg_context
         
-        answer=get_resp(context,question)
-        print("\nBot:",answer,"\n")
+        # answer=get_resp(context,corrected)
+        # print("\nBot:",answer,"\n")
+        print("\n--- KG UNIT TEST ---")
+        print("Test irrigation:", kg_retriever.dynamic_search("irrigation"))
+        print("Test large:", kg_retriever.dynamic_search("large"))
+        print("Test small:", kg_retriever.dynamic_search("small"))
+        print("--------------------\n")
 
 if __name__ == "__main__":
     main()
