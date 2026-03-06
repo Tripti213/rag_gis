@@ -14,52 +14,35 @@ def get_resp(context_chunks,ques):
     contexts="\n".join(context_chunks)
 
     prompt=f"""
-You are a GIS water-body assistant.
+You are a helpful GIS assistant that explains information about water bodies.
 
-The context already contains the correct candidate entities.
+The information below comes from a trusted dataset. Each line has this format:
 
-Each line follows this format:
 Name - Type - Capacity - Purpose
 
-Your job is to format & generate a short factual paragraph that could answer the question from the provided context only.
+Use ONLY the provided context to answer the question.
 
-Rules:
+Guidelines:
 
-1. If the question asks:
-   - "which one"
-   - "highest"
-   - "largest"
-   - "maximum"
-   - "top"
-   
-   → Return ONLY the entity with the **highest capacity**.
-
-2. If the question asks:
-   - "smallest"
-   - "minimum"
-   - "lowest"
-
-   → Return ONLY the entity with the **lowest capacity**.
-
-3. If the question asks to **list or show entities**
-   → Return ALL entities exactly as provided.
-
-4. Do NOT invent data.
-5. Do NOT modify numbers.
-6. Only use the provided context.
-
-7. If the context is empty return exactly:
-No entities match the given criteria :(
+1. Explain the result in simple language so that a normal person can understand.
+2. If multiple entities match the query, introduce them first and then list them clearly.
+3. If only one entity matches, explain why it is the result.
+4. Do not invent information that is not in the context.
+5. If the question asks for coordinates, extract them from the text and show them clearly.
+6. If no entities match the query, respond exactly with:
+   "No entities match the given conditions, try asking other ques :("
 
 Context:
 {contexts}
 
 Question:
 {ques}
+
+Answer in a clear and friendly way.
 """
 
     response=client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite",
         contents=prompt,
     )
 

@@ -36,19 +36,19 @@ def extract_operator(query):
 
     query=query.lower()
 
-    if "greater than or equal" in query or "at least" in query:
+    if any(word in query for word in ["greater than or equal","at least"]):
         return ">="
 
-    if "less than or equal" in query or "at most" in query:
+    if any(word in query for word in ["less than or equal","at most"]):
         return "<="
 
-    if ("greater than" in query or "larger than" in query or "bigger than" or "above" in query):
+    if any(word in query for word in ["greater than", "larger than","bigger than","above"]):
         return ">"
 
-    if ("less than" in query or "smaller than" or "below" in query):
+    if any(word in query for word in ["less than","smaller than","below"]):
         return "<"
 
-    if "equal to" in query or "same as" in query:
+    if any(word in query for word in ["equal to","same as","same","equal"]):
         return "="
 
     return None
@@ -61,9 +61,9 @@ def get_capacity(text):
     if m:
         return int(m.group(1))
 
-    return 0
+    return None
 
-def capacity_filter(entity, operator, entity_text_map,number=None):
+def capacity_filter(entity, operator, entity_text_map,number=None,range_vals_given=None):
     if entity:
         ref_capacity=get_capacity(entity_text_map[entity])
     else:
@@ -75,6 +75,20 @@ def capacity_filter(entity, operator, entity_text_map,number=None):
     for name, text in entity_text_map.items():
 
         cap=get_capacity(text)
+
+        if cap is None:
+            continue
+
+        if range_vals_given:
+            low,high=range_vals_given
+            if low<=cap<=high:
+                results.append((cap,text))
+            continue    
+
+        if entity:
+            ref_capacity=get_capacity(entity_text_map[entity])
+        else:
+            ref_capacity=number
 
         if operator==">" and cap>ref_capacity:
             results.append((cap,text))
@@ -94,7 +108,7 @@ def capacity_filter(entity, operator, entity_text_map,number=None):
 def detect_intent_of_ques(query):
     q=query.lower()
     count_words=["how many","count","number of","total","in total"]
-    max_words=["maximum","highest","largest","top"]
+    max_words=["maximum","highest","largest"]
     min_words=["smallest","minimum","lowest"]
 
     for w in count_words:
@@ -110,3 +124,13 @@ def detect_intent_of_ques(query):
             return "MIN"
 
     return "LIST"            
+
+def extract_range(query):
+
+    nums=re.findall(r'(\d+)\s*m', query.lower())
+
+    if len(nums)>=2:
+        low=int(nums[0])
+        high=int(nums[1])
+        return low,high
+    return None

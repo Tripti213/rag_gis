@@ -6,7 +6,7 @@ from rag.extract import build_entity_vocab_from_csv,extract_csv
 from rag.typo_matcher import FuzzyMatcher
 from rag.kg_loader import load_kgraph
 from rag.kg_retriever import KGRetriever
-from rag.query_parser import extract_entity,extract_operator,capacity_filter,get_capacity,extract_type,extract_second_entity,detect_intent_of_ques
+from rag.query_parser import extract_entity,extract_operator,capacity_filter,get_capacity,extract_type,extract_second_entity,detect_intent_of_ques,extract_range
 
 def pipeline():
 
@@ -59,9 +59,10 @@ def format_context_for_llm(context):
 
         name=text.split(" is a ")[0]
         type_=text.split(" is a ")[1].split(" located")[0]
+        coords=text.split("coordinates ")[1].split(")")[0]+")"
         capacity=text.split("capacity of ")[1].split(".")[0]
         purpose=text.split(".")[-2]
-        formatted.append(f"{name} - {type_} - {capacity} - {purpose}")
+        formatted.append(f"{name} - {type_} - {coords} -  {capacity} - {purpose}")
 
     return formatted
 
@@ -89,15 +90,19 @@ def main():
         operator=extract_operator(corrected)
         number=get_capacity(corrected)
         type_filter=extract_type(corrected)
+        range_vals=extract_range(corrected)
 
         print("Detected entity   : ",entity)
         print("Detected operator : ",operator)
         print("Detected number   : ",number)
         print("Detected type     : ",type_filter)
 
+        if range_vals:
+            context=capacity_filter(entity, operator, entity_text_map, range_vals_given=range_vals)
 
-        if(entity or number) and operator:
-            context=capacity_filter(entity,operator,entity_text_map,number)
+        elif operator:
+            context=capacity_filter(entity, operator, entity_text_map, number=number)
+
             print("Filtered entities : ",context)
 
             if not context:
@@ -139,17 +144,17 @@ def main():
             print()
             continue
         if intent_of_ques=="MAX":
-            max_entity=max(context,key=lambda x:int(x.split(" - ")[2].split("M")[0]))
-            print("Bot: The required water body with the highest capacity is:\n")
-            print(max_entity)
-            print()
-            continue    
+            topmax=sorted(context,
+                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=True)[:3]
+            answer=get_resp(topmax,corrected)
+            print("\nBot: ",answer,"\n")
+            continue   
         if intent_of_ques=="MIN":
-            min_entity=min(context,key=lambda x:int(x.split(" - ")[2].split("M")[0]))
-            print("Bot: The required water body with the lowest capacity is:\n")
-            print(min_entity)
-            print()
-            continue  
+            topmin=sorted(context,
+                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=False)[:3]
+            answer=get_resp(topmin,corrected)
+            print("\nBot: ",answer,"\n")
+            continue   
         answer=get_resp(context, corrected)
         print("\nBot:", answer, "\n")
         # print("\n--- KG UNIT TEST ---")
