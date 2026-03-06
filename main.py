@@ -6,7 +6,7 @@ from rag.extract import build_entity_vocab_from_csv,extract_csv
 from rag.typo_matcher import FuzzyMatcher
 from rag.kg_loader import load_kgraph
 from rag.kg_retriever import KGRetriever
-from rag.query_parser import extract_entity,extract_operator,capacity_filter,get_capacity,extract_type,extract_second_entity,detect_intent_of_ques,extract_range
+from rag.query_parser import extract_entity,extract_operator,capacity_filter,get_capacity,extract_type,extract_second_entity,detect_intent_of_ques,extract_range,cross_type_compare
 
 def pipeline():
 
@@ -89,13 +89,23 @@ def main():
         entity=extract_entity(corrected,entity_text_map.keys())
         operator=extract_operator(corrected)
         number=get_capacity(corrected)
-        type_filter=extract_type(corrected)
         range_vals=extract_range(corrected)
+        wbody_types=extract_type(corrected)
+        type_filter=None
+        if isinstance(wbody_types,list) and len(wbody_types)==1:
+            type_filter=wbody_types[0]
 
         print("Detected entity   : ",entity)
         print("Detected operator : ",operator)
         print("Detected number   : ",number)
         print("Detected type     : ",type_filter)
+
+        if len(wbody_types)==2 and operator:
+            context=cross_type_compare(wbody_types[0],wbody_types[1],operator,entity_text_map)
+            context=format_context_for_llm(context)
+            answer=get_resp(context,corrected)
+            print("\nBot:",answer,"\n")
+            continue
 
         if range_vals:
             context=capacity_filter(entity, operator, entity_text_map, range_vals_given=range_vals)
@@ -133,7 +143,7 @@ def main():
             continue
 #using filtering if query is rank based
         if type_filter:
-            context=[x for x in context if f"{type_filter.capitalize()}" in x]
+            context=[x for x in context if f"is a {type_filter.capitalize()}" in x]
         
         #checking for words like count, min,max as llm hallucinates from nums!!
         intent_of_ques=detect_intent_of_ques(corrected)
@@ -148,13 +158,13 @@ def main():
             continue
         if intent_of_ques=="MAX":
             topmax=sorted(context,
-                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=True)[:3]
+                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=True)[:5]
             answer=get_resp(topmax,corrected)
             print("\nBot: ",answer,"\n")
             continue   
         if intent_of_ques=="MIN":
             topmin=sorted(context,
-                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=False)[:3]
+                          key=lambda x:int(x.split(" - ")[3].split("M")[0]), reverse=False)[:5]
             answer=get_resp(topmin,corrected)
             print("\nBot: ",answer,"\n")
             continue   

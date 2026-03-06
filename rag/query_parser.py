@@ -22,14 +22,46 @@ def extract_second_entity(query, entities, first_entity):
 def extract_type(query):
 
     types=["lake","dam","reservoir","pond","barrage"]
-
+    found=[]
     for t in types:
-        if t in query.lower():
-            return t
+        if t in query or t+"s" in query:
+            found.append(t)
 
-    return None
+    return found
 
+#cross type comparisons, like list dams smller than reservoirs
+def cross_type_compare(type1,type2,operator,entity_text_map):
 
+    type1_items=[]
+    type2_items=[]
+
+    for text in entity_text_map.values():
+
+        if f"is a {type1.capitalize()}" in text:
+            type1_items.append(text)
+
+        if f"is a {type2.capitalize()}" in text:
+            type2_items.append(text)
+
+    results=[]
+
+    for t1 in type1_items:
+
+        cap1=get_capacity(t1)
+
+        for t2 in type2_items:
+
+            cap2=get_capacity(t2)
+
+            if operator=="<" and cap1<cap2:
+                results.append(t1)
+                break
+
+            if operator==">" and cap1>cap2:
+                results.append(t1)
+                break
+
+    return results
 
 
 def extract_operator(query):
@@ -68,7 +100,9 @@ def capacity_filter(entity, operator, entity_text_map,number=None,range_vals_giv
         ref_capacity=get_capacity(entity_text_map[entity])
     else:
         ref_capacity=number   
-    
+
+    if ref_capacity is None and not range_vals_given:
+        return []    
 
     results=[]
 
@@ -108,7 +142,7 @@ def capacity_filter(entity, operator, entity_text_map,number=None,range_vals_giv
 def detect_intent_of_ques(query):
     q=query.lower()
     count_words=["how many","count","number of","total","in total"]
-    max_words=["maximum","highest","largest"]
+    max_words=["maximum","highest","largest","top","best"]
     min_words=["smallest","minimum","lowest"]
 
     for w in count_words:
