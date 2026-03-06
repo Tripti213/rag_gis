@@ -23,6 +23,7 @@ def extract_type(query):
 
     types=["lake","dam","reservoir","pond","barrage"]
     found=[]
+    query=query.lower()
     for t in types:
         if t in query or t+"s" in query:
             found.append(t)
@@ -49,9 +50,15 @@ def cross_type_compare(type1,type2,operator,entity_text_map):
 
         cap1=get_capacity(t1)
 
+        if cap1 is None:
+            continue
+
         for t2 in type2_items:
 
             cap2=get_capacity(t2)
+
+            if cap2 is None:
+                continue
 
             if operator=="<" and cap1<cap2:
                 results.append(t1)
@@ -62,7 +69,6 @@ def cross_type_compare(type1,type2,operator,entity_text_map):
                 break
 
     return results
-
 
 def extract_operator(query):
 

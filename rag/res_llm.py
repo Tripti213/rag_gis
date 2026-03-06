@@ -42,7 +42,7 @@ Answer in a clear and friendly way.
 """
 
     response=client.models.generate_content(
-        model="gemini-3.0-flash-lite",
+        model="gemini-2.5-flash",
         contents=prompt,
     )
 

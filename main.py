@@ -91,6 +91,7 @@ def main():
         number=get_capacity(corrected)
         range_vals=extract_range(corrected)
         wbody_types=extract_type(corrected)
+        print("Extracted water bodies from query : ",wbody_types)
         type_filter=None
         if isinstance(wbody_types,list) and len(wbody_types)==1:
             type_filter=wbody_types[0]
@@ -100,12 +101,34 @@ def main():
         print("Detected number   : ",number)
         print("Detected type     : ",type_filter)
 
-        if len(wbody_types)==2 and operator:
-            context=cross_type_compare(wbody_types[0],wbody_types[1],operator,entity_text_map)
+        if isinstance(wbody_types, list) and len(wbody_types)==2 and operator:
+            type1=None
+            type2=None
+            if "than" in corrected:
+                parts=corrected.split("than")
+                left=parts[0]
+                right=parts[1]
+
+                for t in wbody_types:
+                    if t in left:
+                        type1=t
+                    if t in right:
+                        type2=t
+            else:
+                type1=wbody_types[0]
+                type2=wbody_types[1]
+
+            context=cross_type_compare(type1,type2,operator,entity_text_map)
+
+            if not context:
+                print("\nBot: No entities satisfy the comparison.\n")
+                continue
+
             context=format_context_for_llm(context)
             answer=get_resp(context,corrected)
-            print("\nBot:",answer,"\n")
+            print("\nBot: ", answer, "\n")
             continue
+
 
         if range_vals:
             context=capacity_filter(entity, operator, entity_text_map, range_vals_given=range_vals)
