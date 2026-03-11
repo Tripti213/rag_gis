@@ -30,6 +30,11 @@ class FuzzyMatcher:
             "top","best","largest","smallest",
             "minimum","maximum"
         ]
+
+        self.stop_words = [
+    "how","many","are","is","in","of","the","present","there",
+    "what","which","where","list","give","show","find"
+]
         self.full_vocab=list(set(self.vocab+self.common_words))
 
 
@@ -46,6 +51,9 @@ class FuzzyMatcher:
         corrected=[]
 
         for w in words:
+            if w in self.stop_words:
+                corrected.append(w)
+                continue
         #handles short words typo    
             if w in self.short_map:
                 corrected.append(self.short_map[w])
@@ -55,12 +63,16 @@ class FuzzyMatcher:
                 corrected.append(w)
                 continue
 
+            if len(w)<=3:
+                corrected.append(w)
+                continue
+
         #if not correct input, chck len 1st and then score
-            scorer=fuzz.partial_ratio if len(w)<=4 else fuzz.ratio
+            scorer=fuzz.partial_ratio if len(w)<=3 else fuzz.ratio
 
             match=process.extractOne(w,self.full_vocab,scorer=scorer)
 
-            if match and match[1]>72:
+            if match and match[1]>85:
                 corrected.append(match[0])
             else:
                 corrected.append(w)
