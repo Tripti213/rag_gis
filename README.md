@@ -26,18 +26,6 @@ An enterprise-grade Geographic Information System (GIS) chatbot built for govern
 4. **Generation:** The retrieved facts are packaged into a strict context prompt and sent to Google Gemini.
 5. **Output:** Gemini generates a clean, human-readable response which is sent back to React and spoken aloud.
 
-## Core Components
-
-### Frontend (React)
-* **`App.jsx`**: The main application wrapper. Manages the chat history state and handles the Text-to-Speech (TTS) browser synthesis.
-* **`ChatInput.jsx`**: The custom voice-enabled command center. Utilizes the native Web Speech API to capture user voice, detect speech pauses for auto-submission, and handle UI state (like the pulsing microphone animation).
-* **`App.css`**: Contains the custom styling for the chat interface, including the dynamic `keyframes` pulse animations for the active listening state.
-
-### Backend (FastAPI / Python)
-* **`api.py`**: The central API server and routing engine. Contains the Hybrid Router logic that intercepts mathematical queries (like "largest lake") to process them with Pandas before they reach the LLM.
-* **`main.py`**: The data ingestion engine. Converts raw CSV geographical data into semantic English sentences and loads them into the FAISS vector database upon startup.
-* **`rag/res_llm.py`**: The LLM interaction layer. Applies strict system prompts to the Gemini model, forcing it to answer concisely based *only* on retrieved context.
-
 ## Tech Stack
 
 **Frontend:**
@@ -56,7 +44,7 @@ An enterprise-grade Geographic Information System (GIS) chatbot built for govern
 * Custom JSON Knowledge Graph
 * Text Embeddings
 
-## 🔑 Environment Variables
+## Environment Variables
 
 To run this project, you will need to set up your API keys. 
 
@@ -65,7 +53,7 @@ Create a `.env` file in the root of your `backend` directory and add the followi
 ```env
 GEMINI_API_KEY="your_google_gemini_api_key_here"
 ```
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 * Python 3.9+
