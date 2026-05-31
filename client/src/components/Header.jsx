@@ -15,10 +15,6 @@ function Header({ clearChat, isMuted, toggleMute }) {
         >
           {isMuted ? "🔇 Muted" : "🔊 Sound On"}
         </button>
-
-        <button className="new-chat" onClick={clearChat}>
-          + New Chat
-        </button>
       </div>
     </header>
   )

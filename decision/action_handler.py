@@ -1,16 +1,19 @@
-def handle(action,state,kg,matcher,ai,q):
+# 1. Added history=[] to the arguments
+def handle(action, state, kg, matcher, ai, q, history=[]):
 
     if action=="CHITCHAT":
-        return ai("Respond naturally to the user greeting or casual message.",q)
+        # 2. Passed history to ai()
+        return ai("Respond naturally to the user greeting or casual message.", q, history)
 
     if action=="EXPLORE":
-        return ai("Ask what the user wants to build and their goal",q)
+        # 2. Passed history to ai()
+        return ai("Ask what the user wants to build and their goal", q, history)
 
     if action=="REFINE":
         if state.area and state.depth:
             return "Proceeding with available data..."
-        return ai(
-f"""
+        
+        prompt = f"""
 User wants recommendation.
 
 Known:
@@ -20,7 +23,9 @@ depth:{state.depth}
 slope:{state.slope}
 
 Ask ONE specific question to improve accuracy.
-""",q)
+"""
+        # 2. Passed history to ai()
+        return ai(prompt, q, history)
 
     if action=="RECOMMEND":
 
@@ -30,10 +35,11 @@ Ask ONE specific question to improve accuracy.
             result=matcher.check_suitability(site,state.type)
             return str(result)
 
-        return ai("Suggest suitable structures based on data",q)
+        # 2. Passed history to ai()
+        return ai("Suggest suitable structures based on data", q, history)
 
     if action=="KG":
         nodes=kg.dynamic_search(q)
         return str(nodes[:5])
 
-    return "I couldn’t understand this query."
+    return ai(f"The user asked: '{q}'. Please use the conversation history to answer this follow-up.", q, history)

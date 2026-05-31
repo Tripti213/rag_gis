@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from typing import List, Dict
 import re
 import math
 
@@ -68,9 +69,13 @@ aliases = {
     "khadeen":      "Khadin",
 }
 
+class Message(BaseModel):
+    role: str
+    content: str
+
 class Query(BaseModel):
     question:str
-
+    history: List[Message] = []
 
 
 def parse_infiltration(val):
@@ -181,6 +186,24 @@ def ask_question(query:Query):
 
     state.update(intent=intent_ml,t=t,features=features)
 
+    if any(w in words for w in ["them", "these", "those", "it", "each"]) and len(query.history) > 0:
+        
+        feature_data = ""
+        for _, r in matcher.df.iterrows():
+            feature_data += f"- {r['Body Type']} -> Area: {r['Area']}, Depth: {r['Height / Depth']}\n"
+            
+        fallback_prompt = f"""
+        The user is asking a follow-up question: "{q}".
+        
+        Look at the CONVERSATION HISTORY to see which structures they are talking about.
+        Then, use this MASTER DATABASE to answer their specific question about those structures:
+        
+        {feature_data}
+        
+        Keep it brief and bulleted.
+        """
+        return {"answer": ai(fallback_prompt, q, query.history)}
+
     if lat:
 
         candidates=[]
@@ -239,11 +262,11 @@ The differnce is as follows :
 {context}
 
 """
-            return {"answer":ai(prompt,q)}
+            return {"answer":ai(prompt,q, query.history)}
 
         else:
-            return {"answer":ai("Compare "+q,q)}
-    
+            return {"answer":ai("Compare "+q,q, query.history)}
+
     # for general info like reqments etc
     if intent=="feature_info" and t:
 
@@ -336,7 +359,7 @@ The differnce is as follows :
 # {context}
 # """
 
-#         return {"answer":ai(prompt,q)}
+#         return {"answer":ai(prompt,q, query.history)}
 
     if intent=="slope" and state.type and state.slope:
 
@@ -723,8 +746,8 @@ The differnce is as follows :
             context="Suitable structures:\n"+("\n".join([f"- {b}" for b in best]) if best else "None")
             
             prompt=f"Explain clearly why these structures are suitable:\n{context}"
-        
-            return {"answer":ai(prompt,q)}
+
+            return {"answer":ai(prompt,q, query.history)}
 
     
     
@@ -736,7 +759,7 @@ The differnce is as follows :
         valid=[r for r in rows if r.get("area") is not None and not (isinstance(r.get("area"),float) and math.isnan(r.get("area")))]
 
         if not valid:
-            return {"answer":ai("No valid data found.",q)}
+            return {"answer":ai("No valid data found.",q, query.history)}
 
         best=max(valid,key=lambda x:x["area"])
         return {"answer":(format_rows([best],"Largest Water Body"))}
@@ -856,7 +879,7 @@ Type: {r['Work_Name']}
 Village: {r['Village']}
 Area: {r['Ar']}
 Depth: {r['Depth']}
-""",q)}
+""",q, query.history)}
 
     
 
@@ -875,7 +898,8 @@ Depth: {r['Depth']}
         action=decide(state)
 
     if action!="RECOMMEND":
-        response=handle(action,state,kg,matcher,ai,corrected)
+        # Pass query.history into the handle function!
+        response = handle(action, state, kg, matcher, ai, corrected, query.history) 
         if response and isinstance(response,str) and len(response)<200:
             return {"answer":response}
 
@@ -908,10 +932,21 @@ Depth: {r['Depth']}
 
 
 
-    return {
-    "answer":"I couldn’t understand this query.\n\nTry asking:\n"
-             "• water bodies in a location\n"
-             "• slope-based structures\n"
-             "• area and depth conditions\n"
-             "• compare structures"
-}
+    # --- CONVERSATIONAL FALLBACK ---
+    feature_data = ""
+    for _, r in matcher.df.iterrows():
+        feature_data += f"- {r['Body Type']} -> Area: {r['Area']}, Depth: {r['Height / Depth']}, Slope: {r['Slope']}\n"
+
+    # 2. Give the cheat sheet and the history to Gemini
+    fallback_prompt = f"""
+    The user asked a conversational follow-up question: "{q}".
+    
+    Please read the CONVERSATION HISTORY. 
+    If the user is asking to describe structures, get their area/depth, or refer to previous items, use the following Master Database to give them exact numbers.
+    
+    MASTER DATABASE:
+    {feature_data}
+    
+    Provide a clean, helpful, and concise answer based on the history and the Master Database.
+    """
+    return {"answer": ai(fallback_prompt, q, query.history)}

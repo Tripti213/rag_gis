@@ -1,0 +1,81 @@
+.sidebar {
+  width: 260px;
+  /* Semi-transparent dark slate instead of solid color */
+  background-color: rgba(2, 6, 23, 0.65); 
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  /* A very subtle glowing border to separate it from the chat */
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100vh;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.new-chat-btn {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+
+.new-chat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.plus-icon {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.history-container {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+
+.history-title {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  font-weight: 600;
+  padding-left: 8px;
+}
+
+.history-item {
+  padding: 10px 12px;
+  border-radius: 6px;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-item:hover {
+  background-color: #1e293b; /* Hover highlight */
+}
+
+.history-item.active {
+  background-color: #1e293b;
+  color: #3b82f6;
+  font-weight: 500;
+}
