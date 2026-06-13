@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Dict
 import re
 import math
+from fastapi import FastAPI, Request
+import time
 
 from main import (
     pipeline,
@@ -38,7 +40,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+@app.middleware("http")
+async def measure_latency(request: Request, call_next):
+    start_time = time.time()
+    
+    # This lets your ask_question function do its work
+    response = await call_next(request) 
+    
+    # Calculate how long it took in milliseconds
+    process_time = (time.time() - start_time) * 1000
+    
+    # Print the time in the terminal!
+    print(f"\n⏱️ Query Latency: {process_time:.2f} ms\n")
+    
+    return response
 
 print("Loading RAG pipeline...")
 retr,fuzzy,kg,matcher=pipeline()
